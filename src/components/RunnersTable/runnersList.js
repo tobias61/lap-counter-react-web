@@ -8,6 +8,7 @@ const runnersQuery = gql`
                 lastName
                 firstName
                 email
+                number
             }
         }
     }

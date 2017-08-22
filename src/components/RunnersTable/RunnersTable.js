@@ -58,9 +58,30 @@ class RunnersTable extends React.Component {
     }
 
     render() {
-        if (!this.props.data.runnerList) {
-            return <div />;
-        }
+
+      const header = <div><div style={{ padding: 10, textAlign: 'left' }}>
+          <Button
+            type="primary"
+
+          >
+            <Link to="/runners/create">Neu</Link>
+          </Button>
+
+
+          <div style={{ float: 'right' }}>
+            <Button
+
+            >
+              <Link to="/import">Import</Link>
+            </Button>
+          </div>
+        </div>
+				<div className="clear"></div>
+      </div>;
+
+			if (!this.props.data.runnerList || !this.props.data.runnerList.runners) {
+        return <div>{header}</div>;
+			}
         const dataSource = this.props.data.runnerList.runners.map(item => ({
             key: item.id,
             firstName: item.firstName,
@@ -104,25 +125,7 @@ class RunnersTable extends React.Component {
 
         return (
             <div>
-                <div style={{ padding: 10, textAlign: 'left' }}>
-                    <Button
-                        type="primary"
-
-                    >
-                        <Link to="/runners/create">Neu</Link>
-                    </Button>
-
-
-                    <div style={{ float: 'right' }}>
-                        <Button
-
-                        >
-                            <Link to="/import">Import</Link>
-                        </Button>
-                    </div>
-                </div>
-                <div className="clear"></div>
-
+              {header}
                 <Table dataSource={dataSource} columns={columns} />
             </div>
         );

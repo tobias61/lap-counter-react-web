@@ -15,6 +15,9 @@ import getRunner from './getRunner';
 import createRunner from './createRunner.js';
 import updateRunner from './updateRunner.js';
 import runnersQuery from './../RunnersTable/runnersList.js';
+import * as _ from "lodash";
+import {checkNumberQuery} from "./checkNumber";
+import { request } from 'graphql-request';
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -161,6 +164,45 @@ class RunnerForm extends React.Component {
           })(<Input />)}
         </FormItem>
 
+        <FormItem {...formItemLayout} label="Startnummer" hasFeedback>
+					{getFieldDecorator('number', {
+						rules: [
+							{
+								pattern: /^\d{3}$/g,
+								message: 'Startnummer muss eine dreistellige Zahl sein, z.B.: 555',
+							},
+							{
+								validator: (rule, value, callback)=>{
+								  if (!value){
+										callback();
+                  }
+                  value = parseInt(value);
+
+								  if (value < 100){
+								    return callback(true);
+                  }
+
+                  if (_.isNumber(value)){
+										request('/graphql', checkNumberQuery, {number: value}).then(res => {
+										  if (res.checkNumber.available === true){
+												return callback();
+                      }
+											return callback(true);
+                    }).catch(()=>{
+											return callback(true);
+                    })
+
+                  }else {
+										return callback(true);
+                  }
+
+								  },
+								message: 'Startnummer bereits vergeben!',
+							},
+						],
+					})(<Input />)}
+        </FormItem>
+
         <FormItem
           {...formItemLayout}
           label={<span>Team / Sponsor</span>}
@@ -229,6 +271,9 @@ const WrappedRunnerForm = Form.create({
       email: {
         value: props.getRunner.runner.email,
       },
+			number: {
+				value: props.getRunner.runner.number,
+			},
       sponsor_id: {
         value: props.getRunner.runner.sponsor ? props.getRunner.runner.sponsor.id : null,
       },

@@ -7,6 +7,7 @@ const query = gql`query getRunner($id: String) {
     lastName
     firstName
     email
+      number
     sponsor {
       id
       name
