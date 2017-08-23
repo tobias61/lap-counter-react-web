@@ -9,8 +9,13 @@ const query = gql`query getRunner($id: String) {
     email
       number
     sponsor {
-      id
-      name
+        id
+        name
+        contact_firstName
+        contact_lastName
+        cash
+        donation_receipt
+        email
     }
   }
   sponsorList{

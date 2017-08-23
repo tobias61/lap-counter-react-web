@@ -13,6 +13,7 @@ import SponsorForm from "./components/SponsorForm/SponsorForm";
 import RunnersImport from "./components/RunnersImport/RunnersImport";
 const { Header, Content, Footer, Sider } = Layout;
 
+
 class App extends Component {
   render() {
     return (
@@ -31,9 +32,11 @@ class App extends Component {
                           <Route exact path="/" component={Home}/>
                           <Route exact path="/import" component={RunnersImport}/>
                           <Route exact path="/runners" component={RunnersTable}/>
-                          <Route exact path="/runners/:id" render={(props) => (
-                              <RunnerForm id={props.match.params.id !== 'create' ? props.match.params.id : null}/>
-                          )}/>
+                        <Route exact path="/runners/:id" render={(props) => (
+                          <RunnerForm personal onCreate={(item)=>{
+														props.history.push('/runners/'+item.id)
+													}} id={props.match.params.id !== 'create' ? props.match.params.id : null}/>
+												)} />
                           <Route exact path="/sponsors" component={SponsorsTable}/>
                           <Route exact path="/sponsors/:id" render={(props) => (
                               <SponsorForm id={props.match.params.id !== 'create' ? props.match.params.id : null}/>

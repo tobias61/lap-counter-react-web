@@ -9,7 +9,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { message, Button, Form, Input, Select, InputNumber } from 'antd';
+import {message, Button, Form, Input, Select, InputNumber, Checkbox} from 'antd';
 import {graphql, compose} from 'react-apollo';
 import getRunner from './getRunner';
 import createRunner from './createRunner.js';
@@ -18,6 +18,10 @@ import runnersQuery from './../RunnersTable/runnersList.js';
 import * as _ from "lodash";
 import {checkNumberQuery} from "./checkNumber";
 import { request } from 'graphql-request';
+import { DatePicker } from 'antd';
+import updateSponsor from "../SponsorForm/updateSponsor";
+import createSponsor from "../SponsorForm/createSponsor";
+import sponsorsQuery from '../SponsorsTable/sponsorsList';
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -27,12 +31,15 @@ class RunnerForm extends React.Component {
     id: PropTypes.string,
     getRunner: PropTypes.object.isRequired,
     form: PropTypes.object,
+    onCreate: PropTypes.func,
     createRunnerMutation: PropTypes.func.isRequired,
-      updateRunnerMutation: PropTypes.func.isRequired,
+    updateRunnerMutation: PropTypes.func.isRequired,
+    personal: PropTypes.bool.isRequired,
   };
 
   static defaultProps = {
     id: null,
+		personal: false,
   };
 
   constructor(props) {
@@ -48,27 +55,90 @@ class RunnerForm extends React.Component {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
 
+        let runnerKeys = ["email","lastName","firstName","birthday","number"];
+				let sponsorKeys = ["email","contact_lastName","contact_firstName","sponsor_amount","cash","donation_receipt"];
+				let reduceValues = (array,values) => {
+					return array.reduce((res, cur)=>{
+						if (cur === "email" && values[cur] === ""){
+							return res;
+						}
+						res[cur] = values[cur];
+						return res;
+					},{});
+        }
+
+				let runnerValues = reduceValues(runnerKeys,values);
+				let sponsorValues = reduceValues(sponsorKeys,values);
+
+				let onCreate = (runner)=>{
+					if (!this.props.id && this.props.onCreate){
+						this.props.onCreate(runner);
+					}
+        }
+
+				let updateSponsor = (values, runner) => {
+
+					this.props
+						.updateSponsorMutation({
+							refetchQueries: [{ query: sponsorsQuery }],
+							variables: {
+								id: this.props.runner.sponsor.id,
+								sponsorInput: values
+							},
+						})
+						.then(res => {
+							console.log(res);
+
+						});
+        }
+
+				let createSponsor = (values, runner) => {
+
+					this.props
+						.createSponsorMutation({
+							refetchQueries: [{ query: sponsorsQuery }],
+							variables: {
+								runner_id: runner.id,
+								sponsorInput: values
+							},
+						})
+						.then(res => {
+							console.log(res);
+
+						});
+				}
+
           if (this.props.id){
               this.props
                   .updateRunnerMutation({
                       refetchQueries: [{ query: runnersQuery }],
                       variables: {
                           id: this.props.id,
-                          runnerInput: values
+                          runnerInput: runnerValues
                       },
                   })
                   .then(res => {
-                      console.log(res);
-
+                    const runner = res.data.createRunner;
+										if (this.props.personal){
+										  if (runner.sponsor){
+												updateSponsor(sponsorValues, runner);
+                      }else {
+												createSponsor(sponsorValues, runner);
+                      }
+										}
                   });
           }else {
               this.props
                   .createRunnerMutation({
                       refetchQueries: [{ query: runnersQuery }],
-                      variables: { runnerInput: values },
+                      variables: { runnerInput: runnerValues },
                   })
                   .then(res => {
-                      console.log(res);
+                    if (this.props.personal){
+											createSponsor(sponsorValues, res.data.createRunner);
+                    }else {
+											onCreate(res.data.createRunner);
+                    }
 
                   });
           }
@@ -84,7 +154,6 @@ class RunnerForm extends React.Component {
 
   render() {
     const { getFieldDecorator } = this.props.form;
-
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },
@@ -111,6 +180,12 @@ class RunnerForm extends React.Component {
 
     return (
       <Form style={{ padding: 10 }} onSubmit={this.handleSubmit}>
+
+        <div className="ant-form-item-label ant-col-xs-24 ant-col-sm-6">
+          <h3>Läufer Informationen</h3>
+        </div>
+        <div className="clear" style={{paddingBottom: 8, paddingTop: 15}}></div>
+
         <FormItem {...formItemLayout} label={<span>Anrede</span>} hasFeedback>
           {getFieldDecorator('gender', {
             initialValue: 'weiblich',
@@ -153,6 +228,17 @@ class RunnerForm extends React.Component {
           })(<Input />)}
         </FormItem>
 
+        <FormItem {...formItemLayout} label="Geburtstag" hasFeedback>
+					{getFieldDecorator('birthday', {
+						rules: [
+							{
+								required: true,
+								message: 'Geburtsdatum ist erforderlich'
+							},
+						],
+					})(<DatePicker format="DD.MM.YYYY"/>)}
+        </FormItem>
+
         <FormItem {...formItemLayout} label="E-mail" hasFeedback>
           {getFieldDecorator('email', {
             rules: [
@@ -183,7 +269,7 @@ class RunnerForm extends React.Component {
                   }
 
                   if (_.isNumber(value)){
-										request('/graphql', checkNumberQuery, {number: value}).then(res => {
+										request('/graphql', checkNumberQuery, {number: value, runner_id: this.props.id}).then(res => {
 										  if (res.checkNumber.available === true){
 												return callback();
                       }
@@ -203,46 +289,120 @@ class RunnerForm extends React.Component {
 					})(<Input />)}
         </FormItem>
 
-        <FormItem
-          {...formItemLayout}
-          label={<span>Team / Sponsor</span>}
-          hasFeedback
-          extra={
+        { this.props.personal ? <div>
+
+          <div className="ant-form-item-label ant-col-xs-24 ant-col-sm-6">
+            <h3>Sponsor Informationen</h3>
+          </div>
+          <div className="clear" style={{paddingBottom: 8, paddingTop: 15}}></div>
+
+          <FormItem {...formItemLayout} label={<span>Vorname</span>} hasFeedback>
+						{getFieldDecorator('contact_firstName', {
+							rules: [
+								{
+									required: true,
+									message: 'Vorname eintragen',
+									whitespace: true,
+								},
+							],
+						})(<Input />)}
+          </FormItem>
+
+          <FormItem {...formItemLayout} label={<span>Nachname</span>} hasFeedback>
+						{getFieldDecorator('contact_lastName', {
+							rules: [
+								{
+									required: true,
+									message: 'Nachname eintragen',
+									whitespace: true,
+								},
+							],
+						})(<Input />)}
+          </FormItem>
+
+          <FormItem
+						{...formItemLayout}
+            label={<span>Spendenbetrag / Runde</span>}
+            hasFeedback
+          >
+						{getFieldDecorator('sponsor_amount', {
+							rules: [
+								{
+									pattern: /(?:^\d{1,3}(?:\.?\d{3})*(?:,\d{2})?$)|(?:^\d{1,3}(?:,?\d{3})*(?:\.\d{2})?$)/g,
+									message: 'Betrag ungültig',
+								},
+							],
+						})(<Input />)}
+          </FormItem>
+
+          <FormItem
+						{...formItemLayout}
+            label={<span>Barzahlung?</span>}
+            hasFeedback
+          >
+						{getFieldDecorator('cash', {
+							valuePropName: 'checked',
+							rules: [],
+						})(<Checkbox />)}
+          </FormItem>
+
+          <FormItem
+						{...formItemLayout}
+            label={<span>Spendenbescheinigung?</span>}
+            hasFeedback
+          >
+						{getFieldDecorator('donation_receipt', {
+							valuePropName: 'checked',
+							rules: [],
+						})(<Checkbox />)}
+          </FormItem>
+
+        </div> : <div>
+
+          <FormItem
+						{...formItemLayout}
+            label={<span>Team / Sponsor</span>}
+            hasFeedback
+            extra={
               <div style={{textAlign: 'left'}}>
-                  {this.props.getRunner.runner && this.props.getRunner.runner.sponsor
-                      ? <a href={`/sponsors/${this.props.getRunner.runner.sponsor.id}`}>
-                          Sponsor bearbeiten
-                      </a>
-                      : this.props.id ? <div><a href={`/sponsors/create`}>
-                          Sponsor erstellen
-                      </a> oder <a href={`/sponsors/create`}>
-                          selbst sponsorn
-                      </a></div> : null}
+								{this.props.getRunner.runner && this.props.getRunner.runner.sponsor
+									? <a href={`/sponsors/${this.props.getRunner.runner.sponsor.id}`}>
+                    Sponsor bearbeiten
+                  </a>
+									: this.props.id ? <div><a href={`/sponsors/create`}>
+                    Sponsor erstellen
+                  </a> oder <a href={`/sponsors/create`}>
+                    selbst sponsorn
+                  </a></div> : null}
               </div>
 
-          }
-        >
-          {getFieldDecorator('sponsor_id', {
-            rules: [],
-          })(
-            <Select
-              showSearch
-              placeholder="Team wählen"
-              optionFilterProp="children"
-              filterOption={(input, option) => {
-               return option.props.children.join(' ')
-                 .toLowerCase()
-                 .indexOf(input.toLowerCase()) >= 0
-              }}
-            >
-              {this.props.getRunner.sponsorList && this.props.getRunner.sponsorList.sponsors ? this.props.getRunner.sponsorList.sponsors.map(sponsor =>
-                <Option key={sponsor.id} value={sponsor.id}>
-                  {sponsor.name} ({sponsor.email})
-                </Option>,
-              ) : null}
-            </Select>,
-          )}
-        </FormItem>
+						}
+          >
+						{getFieldDecorator('sponsor_id', {
+							rules: [],
+						})(
+              <Select
+                showSearch
+                placeholder="Team wählen"
+                optionFilterProp="children"
+                filterOption={(input, option) => {
+									return option.props.children.join(' ')
+											.toLowerCase()
+											.indexOf(input.toLowerCase()) >= 0
+								}}
+              >
+								{this.props.getRunner.sponsorList && this.props.getRunner.sponsorList.sponsors ? this.props.getRunner.sponsorList.sponsors.map(sponsor =>
+                  <Option key={sponsor.id} value={sponsor.id}>
+										{sponsor.name} ({sponsor.email})
+                  </Option>,
+								) : null}
+              </Select>,
+						)}
+          </FormItem>
+
+        </div>}
+
+
 
         <FormItem {...tailFormItemLayout}>
           <Button type="primary" htmlType="submit">
@@ -277,6 +437,18 @@ const WrappedRunnerForm = Form.create({
       sponsor_id: {
         value: props.getRunner.runner.sponsor ? props.getRunner.runner.sponsor.id : null,
       },
+			contact_firstName: {
+				value: props.getRunner.runner.sponsor ? props.getRunner.runner.sponsor.contact_firstName : null,
+			},
+			contact_lastName: {
+				value: props.getRunner.runner.sponsor ? props.getRunner.runner.sponsor.contact_lastName : null,
+			},
+			cash: {
+				value: props.getRunner.runner.sponsor ? props.getRunner.runner.sponsor.cash : null,
+			},
+			donation_receipt: {
+				value: props.getRunner.runner.sponsor ? props.getRunner.runner.sponsor.donation_receipt : null,
+			},
     };
   },
 })(RunnerForm);
@@ -293,5 +465,7 @@ export default compose(
   graphql(createRunner, {
     name: 'createRunnerMutation',
   }),
+	graphql(createSponsor, {name: 'createSponsorMutation',}),
+	graphql(updateSponsor, { name: 'updateSponsorMutation' }),
   graphql(updateRunner, { name: 'updateRunnerMutation' }),
 )(WrappedRunnerForm);

@@ -1,13 +1,15 @@
 
 import gql from 'graphql-tag';
 
-const mutation = gql`mutation updateSponsor($id: String, $sponsorInput: SponsorInput) {
+const mutation = gql`mutation updateSponsor($id: ID!, $sponsorInput: SponsorInput!) {
     updateSponsor(id: $id,sponsor: $sponsorInput) {
         id
-        firstName
-        lastName
+        contact_firstName
+        contact_lastName
         email
         sponsor_amount
+        cash
+        donation_receipt
     }
 }
 `;

@@ -11,6 +11,8 @@ const query = gql`
         contact_firstName
         contact_lastName
         sponsor_amount
+          cash
+          donation_receipt
       }
     }
   }

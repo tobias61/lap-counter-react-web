@@ -43,7 +43,7 @@ class SponsorForm extends React.Component {
                       refetchQueries: [{ query: sponsorsQuery }],
                       variables: {
                           id: this.props.id,
-                          runnerInput: values
+												  sponsorInput: values
                       },
                   })
                   .then(res => {
@@ -54,7 +54,7 @@ class SponsorForm extends React.Component {
               this.props
                   .createSponsorMutation({
                       refetchQueries: [{ query: sponsorsQuery }],
-                      variables: { runnerInput: values },
+                      variables: { sponsorInput: values },
                   })
                   .then(res => {
                       console.log(res);
@@ -162,6 +162,7 @@ class SponsorForm extends React.Component {
           hasFeedback
         >
           {getFieldDecorator('cash', {
+						valuePropName: 'checked',
             rules: [],
           })(<Checkbox />)}
         </FormItem>
@@ -172,6 +173,7 @@ class SponsorForm extends React.Component {
           hasFeedback
         >
           {getFieldDecorator('donation_receipt', {
+						valuePropName: 'checked',
             rules: [],
           })(<Checkbox />)}
         </FormItem>
@@ -223,8 +225,6 @@ export default compose(
       variables: { id: props.id },
     }),
   }),
-  graphql(createSponsor, {
-    name: 'createSponsorMutation',
-  }),
+  graphql(createSponsor, {name: 'createSponsorMutation',}),
   graphql(updateSponsor, { name: 'updateSponsorMutation' }),
 )(WrappedSponsorForm);
