@@ -126,7 +126,7 @@ class RunnersTable extends React.Component {
         return (
             <div>
               {header}
-                <Table dataSource={dataSource} columns={columns} />
+                <Table pagination={false} dataSource={dataSource} columns={columns} />
             </div>
         );
     }

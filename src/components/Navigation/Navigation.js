@@ -25,6 +25,9 @@ class Navigation extends React.Component {
         <Menu.Item>
             <Link to="/sponsors">Sponsoren</Link>
         </Menu.Item>
+        <Menu.Item>
+          <Link to="/teams">Teams</Link>
+        </Menu.Item>
       </Menu>
     );
   }

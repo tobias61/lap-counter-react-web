@@ -11,6 +11,9 @@ import RunnerForm from "./components/RunnerForm/RunnerForm";
 import { Layout, Menu, Breadcrumb, Icon } from 'antd';
 import SponsorForm from "./components/SponsorForm/SponsorForm";
 import RunnersImport from "./components/RunnersImport/RunnersImport";
+import PersonalRunnerForm from "./components/PersonalRunnerForm/PersonalRunnerForm";
+import TeamsTable from "./components/TeamsTable/TeamsTable";
+import TeamForm from "./components/TeamForm/TeamForm";
 const { Header, Content, Footer, Sider } = Layout;
 
 
@@ -33,13 +36,21 @@ class App extends Component {
                           <Route exact path="/import" component={RunnersImport}/>
                           <Route exact path="/runners" component={RunnersTable}/>
                         <Route exact path="/runners/:id" render={(props) => (
-                          <RunnerForm personal onCreate={(item)=>{
-														props.history.push('/runners/'+item.id)
+                          <PersonalRunnerForm personal onCreate={(id)=>{
+														props.history.push('/runners/'+id)
 													}} id={props.match.params.id !== 'create' ? props.match.params.id : null}/>
 												)} />
                           <Route exact path="/sponsors" component={SponsorsTable}/>
                           <Route exact path="/sponsors/:id" render={(props) => (
-                              <SponsorForm id={props.match.params.id !== 'create' ? props.match.params.id : null}/>
+                              <SponsorForm onCreate={(id)=>{
+                                  props.history.push('/sponsors/'+id)
+                              }} id={props.match.params.id !== 'create' ? props.match.params.id : null}/>
+                          )}/>
+                          <Route exact path="/teams" component={TeamsTable}/>
+                          <Route exact path="/teams/:id" render={(props) => (
+                              <TeamForm onCreate={(id)=>{
+                                  props.history.push('/teams/'+id)
+                              }} id={props.match.params.id !== 'create' ? props.match.params.id : null}/>
                           )}/>
                       </Layout>
 

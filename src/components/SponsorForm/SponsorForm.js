@@ -25,6 +25,7 @@ class SponsorForm extends React.Component {
     form: PropTypes.object,
     createSponsorMutation: PropTypes.func,
     updateSponsorMutation: PropTypes.func,
+      onCreate: PropTypes.func,
   };
 
   static defaultProps = {
@@ -58,7 +59,9 @@ class SponsorForm extends React.Component {
                   })
                   .then(res => {
                       console.log(res);
-
+                      if (this.props.onCreate){
+                          this.props.onCreate(res.data.createSponsor.id)
+                      }
                   });
           }
       }
