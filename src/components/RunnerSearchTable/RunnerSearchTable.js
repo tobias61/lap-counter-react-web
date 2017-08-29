@@ -56,6 +56,10 @@ class RunnerSearchTable extends Component {
         const dataSource = this.state.runners;
 
         const columns = [{
+            title: 'Startnummer',
+            dataIndex: 'number',
+            key: 'number',
+        },{
             title: 'Vorname',
             dataIndex: 'firstName',
             key: 'firstName',

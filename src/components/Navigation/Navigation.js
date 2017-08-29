@@ -23,10 +23,10 @@ class Navigation extends React.Component {
             <Link to="/runners">Läufer</Link>
         </Menu.Item>
         <Menu.Item>
-            <Link to="/sponsors">Sponsoren</Link>
+          <Link to="/teams">Teams</Link>
         </Menu.Item>
         <Menu.Item>
-          <Link to="/teams">Teams</Link>
+          <Link to="/results">Auswertung</Link>
         </Menu.Item>
       </Menu>
     );

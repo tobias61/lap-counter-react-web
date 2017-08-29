@@ -6,6 +6,7 @@ const runnersQuery = gql`
             total
             runners {
               id
+              number
               email
               firstName
               lastName

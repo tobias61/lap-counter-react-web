@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 
-const mutation = gql`mutation createSponsor($sponsorInput: SponsorInput, $runner_id: String) {
-    createSponsor(sponsor: $sponsorInput, runner_id: $runner_id) {
+const mutation = gql`mutation createSponsor($sponsorInput: SponsorInput) {
+    createSponsor(sponsor: $sponsorInput) {
         id
         name
         contact_firstName

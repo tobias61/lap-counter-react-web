@@ -26,7 +26,7 @@ class TeamRunnersTable extends Component {
         super(props)
 
         this.state = {
-            searchRunnerModal: true,
+            searchRunnerModal: false,
             addRunnerModal: false,
         }
 
@@ -84,14 +84,13 @@ class TeamRunnersTable extends Component {
 
     render(){
 
-        const dataSource = this.props.runners.map(item => ({
-            key: item.id,
-            firstName: item.firstName,
-            lastName: item.lastName,
-            email: item.email,
-        }));
+        const dataSource = this.props.runners;
 
         const columns = [{
+            title: 'Startnummer',
+            dataIndex: 'number',
+            key: 'number',
+        },{
             title: 'Vorname',
             dataIndex: 'firstName',
             key: 'firstName',
@@ -100,23 +99,20 @@ class TeamRunnersTable extends Component {
             dataIndex: 'lastName',
             key: 'lastName',
         }, {
-            title: 'E-Mail',
-            dataIndex: 'email',
-            key: 'email',
-        },{
             title: '',
             key: 'action',
             render: (text, record) => (
                 <span>
-      <a href={"/runners/"+record.key}>Öffnen</a>
+      <Link to={"/teamrunners/"+record.id}>Öffnen</Link>
       <span className="ant-divider" />
-      <Button
+      <a
+          style={{color: 'red'}}
           onClick={() => {
-              this.onDeleteClick(record.key);
+              this.onDeleteClick(record.id);
           }}
       >
               Aus Team entfernen
-            </Button>
+            </a>
     </span>
             ),
         }];

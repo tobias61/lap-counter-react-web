@@ -1,14 +1,14 @@
 
 import gql from 'graphql-tag';
 
-const query = gql`query getSponsor($id: String) {
-    sponsor(id: $id){
+const query = gql`query getTeamSponsor($teamId: ID!) {
+    teamSponsor(team_id: $teamId){
         id
         name
         contact_firstName
         contact_lastName
+        email
         cash
-        personal
         donation_receipt
         sponsor_amount
     }

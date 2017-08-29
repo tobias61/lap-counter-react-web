@@ -212,7 +212,7 @@ class RunnerForm extends React.Component {
                     })(<Input placeholder="100" />)}
                 </FormItem>
 
-                { this.props.personal ? <div>
+                { this.props.personal === true ? <div>
 
                     <div className="ant-form-item-label ant-col-xs-24 ant-col-sm-6">
                         <h3>Sponsor Informationen</h3>
@@ -288,50 +288,7 @@ class RunnerForm extends React.Component {
                         })(<Checkbox />)}
                     </FormItem>
 
-                </div> : <div>
-
-                    <FormItem
-                        {...formItemLayout}
-                        label={<span>Sponsor</span>}
-                        hasFeedback
-                        extra={
-                            <div style={{textAlign: 'left'}}>
-                                {this.props.runner && this.props.runner.sponsor
-                                    ? <a href={`/sponsors/${this.props.runner.sponsor.id}`}>
-                                        Sponsor bearbeiten
-                                    </a>
-                                    : this.props.id ? <div><a href={`/sponsors/create`}>
-                                        Sponsor erstellen
-                                    </a> oder <a href={`/sponsors/create`}>
-                                        selbst sponsorn
-                                    </a></div> : null}
-                            </div>
-
-                        }
-                    >
-                        {getFieldDecorator('sponsor_id', {
-                            rules: [],
-                        })(
-                            <Select
-                                showSearch
-                                placeholder="Sponsor wählen"
-                                optionFilterProp="children"
-                                filterOption={(input, option) => {
-                                    return option.props.children.join(' ')
-                                        .toLowerCase()
-                                        .indexOf(input.toLowerCase()) >= 0
-                                }}
-                            >
-                                {this.props.sponsors && this.props.sponsors ? this.props.sponsors.map(sponsor =>
-                                    <Option key={sponsor.id} value={sponsor.id}>
-                                        {sponsor.name} ({sponsor.email})
-                                    </Option>,
-                                ) : null}
-                            </Select>,
-                        )}
-                    </FormItem>
-
-                </div>}
+                </div> : null}
 
 
 

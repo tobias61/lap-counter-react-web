@@ -26,6 +26,7 @@ class SponsorForm extends React.Component {
     createSponsorMutation: PropTypes.func,
     updateSponsorMutation: PropTypes.func,
       onCreate: PropTypes.func,
+      onSubmit: PropTypes.func,
   };
 
   static defaultProps = {
@@ -34,10 +35,28 @@ class SponsorForm extends React.Component {
 
   componentDidMount() {}
 
+    cleanValues(values){
+        return Object.keys(values).reduce((res, cur)=>{
+            if (values[cur] === ""){
+                res[cur] = null;
+            }else {
+                res[cur] = values[cur];
+            }
+            return res;
+        },{})
+    }
+
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
+
+          values = this.cleanValues(values);
+          if (this.props.onSubmit){
+              this.props.onSubmit(values);
+              return;
+          }
+
           if (this.props.id){
               this.props
                   .updateSponsorMutation({

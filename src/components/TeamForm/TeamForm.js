@@ -16,6 +16,7 @@ import createTeam from './createTeam';
 import updateTeam from './updateTeam';
 import teamsQuery from '../TeamsTable/teamsList';
 import TeamRunnersTable from "../TeamRunnersTable/TeamRunnersTable";
+import TeamSponsorWidget from "../TeamSponsorWidget/TeamSponsorWidget";
 
 const FormItem = Form.Item;
 
@@ -122,6 +123,16 @@ class TeamForm extends React.Component {
 
             { this.props.id ? <div style={{padding: 10}}>
 
+                <div style={{marginBottom: 20}}>
+                    <div className="ant-form-item-label ant-col-xs-24 ant-col-sm-6">
+                        <label>Sponsor</label>
+                    </div>
+                    <div className="ant-form-item-control-wrapper ant-col-xs-24 ant-col-sm-14">
+                        <TeamSponsorWidget teamId={this.props.id}/>
+                    </div>
+                    <div className="clear"></div>
+                </div>
+
                 <div>
                     <div className="ant-form-item-label ant-col-xs-24 ant-col-sm-6">
                         <label>Läufer</label>
@@ -129,6 +140,7 @@ class TeamForm extends React.Component {
                     <div className="ant-form-item-control-wrapper ant-col-xs-24 ant-col-sm-14">
                         <TeamRunnersTable teamId={this.props.id}/>
                     </div>
+                    <div className="clear"></div>
                 </div>
 
             </div> : null}
