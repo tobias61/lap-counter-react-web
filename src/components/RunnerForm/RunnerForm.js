@@ -14,6 +14,7 @@ import * as _ from "lodash";
 import {checkNumberQuery} from "./checkNumber";
 import {request} from 'graphql-request';
 import * as moment from "moment";
+import 'moment-timezone';
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -57,6 +58,11 @@ class RunnerForm extends React.Component {
         e.preventDefault();
 
         this.props.form.validateFieldsAndScroll((err, values) => {
+
+            if (values.birthday){
+                values.birthday = moment(values.birthday).tz("Europe/Berlin").format();
+            }
+
             if (this.props.onSubmit){
                 this.props.onSubmit(err, this.cleanValues(values));
                 return;

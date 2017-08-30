@@ -8,6 +8,7 @@ const query = gql`query getSponsor($id: String) {
         contact_firstName
         contact_lastName
         cash
+        email
         personal
         donation_receipt
         sponsor_amount
