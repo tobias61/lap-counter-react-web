@@ -16,6 +16,7 @@ import TeamsTable from "./components/TeamsTable/TeamsTable";
 import TeamForm from "./components/TeamForm/TeamForm";
 import TeamRunnerForm from "./components/TeamRunnerForm/TeamRunnerForm";
 import ResultsDashboard from "./components/ResultsDashboard/ResultsDashboard";
+import ResultsPersonalRunner from "./components/ResultsPersonalRunner/ResultsPersonalRunner";
 const { Header, Content, Footer, Sider } = Layout;
 
 
@@ -36,6 +37,7 @@ class App extends Component {
                       <Layout style={{ padding: '24px 0', background: '#fff' }}>
                           <Route exact path="/" component={Home}/>
                           <Route exact path="/results" component={ResultsDashboard}/>
+                          <Route exact path="/results/personal" component={ResultsPersonalRunner}/>
                           <Route exact path="/import" component={RunnersImport}/>
                           <Route exact path="/runners" component={RunnersTable}/>
                         <Route exact path="/runners/:id" render={(props) => (
