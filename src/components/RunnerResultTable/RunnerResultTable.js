@@ -36,8 +36,16 @@ class RunnerResultTable extends Component {
 
     render(){
 
-        const dataSource = this.props.runners;
+        const dataSource = this.props.runners.map((item,index)=> ({...item, position: index+1}));
         const columns = [{
+            title: 'Platz',
+            dataIndex: 'position',
+            key: 'postion',
+        },{
+            title: 'Runden',
+            dataIndex: 'laps',
+            key: 'laps',
+        },{
             title: 'Startnummer',
             dataIndex: 'number',
             key: 'number',
@@ -49,10 +57,6 @@ class RunnerResultTable extends Component {
             title: 'Nachname',
             dataIndex: 'lastName',
             key: 'lastName',
-        }, {
-            title: 'Runden',
-            dataIndex: 'laps',
-            key: 'laps',
         }];
 
         return <div>
