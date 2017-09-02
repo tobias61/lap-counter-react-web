@@ -37,17 +37,18 @@ class ResultsDashboard extends Component {
                 <Col span={8} style={{padding: "0 15px"}}>
                     <h2 style={styles.h2}>Team-Wertung</h2>
                     <ul>
-                        <li><Link to="results/teams?school=false&minTeamSize=0&maxTeamSize=15">Teams bis 15 Teilnehmer</Link></li>
-                        <li><Link to="results/teams?school=false&minTeamSize=16">Teams ab 16 Teilnehmer</Link></li>
-                        <li><Link to="results/teams?school=true">Schulklassen</Link></li>
+                        <li><Link to="results/teams/0/15">Teams bis 15 Teilnehmer</Link></li>
+                        <li><Link to="results/teams/16/">Teams ab 16 Teilnehmer</Link></li>
+                        <li><Link to="results/schoolteams">Schulklassen</Link></li>
                     </ul>
                 </Col>
                 <Col span={8} style={{padding: "0 15px"}}>
                     <h2 style={styles.h2}>Sonder-Wertung</h2>
                     <ul>
-                        <li><Link to="results/personal/0/10">Jüngster</Link></li>
-                        <li><Link to="results/personal/11/15">Ältester</Link></li>
-                        <li><Link to="results/personal/16/25">Schnellster</Link></li>
+                        <li><Link to="results/runners/-laps">Alle Läufer</Link></li>
+                        <li><Link to="results/runners/-birthday">Jüngster</Link></li>
+                        <li><Link to="results/runners/birthday">Ältester</Link></li>
+                        <li><Link to="results/fastestrunners">Schnellster</Link></li>
                     </ul>
                 </Col>
             </Row>

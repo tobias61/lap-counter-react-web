@@ -2,15 +2,13 @@
 import React, {Component} from "react"
 import PropTypes from "prop-types"
 import RunnerResultTable from "../RunnerResultTable/RunnerResultTable";
-import runnersQuery from "./personalRunnerResults";
+import runnersQuery from "./allRunnerResults";
 import {graphql, compose} from "react-apollo";
 
-class ResultsPersonalRunner extends Component {
+class ResultsAllRunner extends Component {
 
     static propTypes = {
-
-        minAge: PropTypes.number,
-        maxAge: PropTypes.number,
+        sort: PropTypes.string,
         data: PropTypes.object,
     };
 
@@ -25,8 +23,8 @@ class ResultsPersonalRunner extends Component {
 
     render(){
         return <div style={{padding: '0 10px'}}>
-            <h1>Ergebnisse Einzelläufer</h1>
-            <RunnerResultTable runners={this.props.data.personalResults ? this.props.data.personalResults.runners : []} />
+            <h1>Ergebnisse aller Läufer</h1>
+            <RunnerResultTable runners={this.props.data.allRunnerResults ? this.props.data.allRunnerResults.runners : []} />
         </div>;
     }
 
@@ -36,8 +34,7 @@ export default compose(
     graphql(runnersQuery, { options: (props)=>({
         fetchPolicy: 'network-only',
         variables: {
-            minAge: props.minAge,
-            maxAge: props.maxAge
+            sort: props.sort
         }
     })})
-)(ResultsPersonalRunner);
+)(ResultsAllRunner);

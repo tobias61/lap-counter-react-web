@@ -9,7 +9,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Form, Input, Checkbox } from 'antd';
+import { Button, Form, Input, Checkbox, message } from 'antd';
 import { graphql, compose } from 'react-apollo';
 import getSponsor from './getSponsor';
 import createSponsor from './createSponsor';
@@ -67,8 +67,7 @@ class SponsorForm extends React.Component {
                             },
                         })
                         .then(res => {
-                            console.log(res);
-
+                            message.success(`Sponsor aktualisiert`);
                         });
                 }else {
                     this.props
@@ -77,7 +76,7 @@ class SponsorForm extends React.Component {
                             variables: { sponsorInput: values },
                         })
                         .then(res => {
-                            console.log(res);
+                            message.success(`Sponsor erstellt`);
                             if (this.props.onCreate){
                                 this.props.onCreate(res.data.createSponsor.id)
                             }

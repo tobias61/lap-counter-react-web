@@ -9,6 +9,7 @@ import sponsorsQuery from '../SponsorsTable/sponsorsList';
 import {graphql, compose} from 'react-apollo';
 import runnersQuery from "../RunnersTable/runnersList";
 import {connect} from "react-redux";
+import { message } from 'antd';
 
 class PersonalRunnerForm extends Component {
 
@@ -44,7 +45,7 @@ class PersonalRunnerForm extends Component {
                     },
                 })
                 .then(res => {
-
+                    message.success(`Änderung gespeichert`);
                 });
         }else {
             this.props
@@ -53,8 +54,8 @@ class PersonalRunnerForm extends Component {
                     variables: { runnerInput: input },
                 })
                 .then(res => {
+                    message.success(`Läufer erstellt`);
                     if (!this.props.id && this.props.onCreate){
-                        console.log(res);
                         this.props.onCreate(res.data.createPersonalRunner.id);
                     }
                 });

@@ -9,7 +9,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Form, Input, Checkbox } from 'antd';
+import { Button, Form, Input, Checkbox, message } from 'antd';
 import { graphql, compose } from 'react-apollo';
 import getTeam from './getTeam';
 import createTeam from './createTeam';
@@ -51,7 +51,7 @@ class TeamForm extends React.Component {
                   })
                   .then(res => {
                       console.log(res);
-
+                      message.success(`Team aktualisiert`);
                   });
           }else {
               this.props
@@ -63,6 +63,7 @@ class TeamForm extends React.Component {
                         if (this.props.onCreate){
                             this.props.onCreate(res.data.createTeam.id)
                         }
+                        message.success(`Team erstellt`);
                   });
           }
       }

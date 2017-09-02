@@ -9,12 +9,13 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { message, Button, Table } from 'antd';
+import { message, Button, Table , Input} from 'antd';
 import { graphql, compose } from 'react-apollo';
 import {Link} from "react-router-dom";
 import gql from 'graphql-tag'
 import runnersQuery from './runnersList';
-
+import {runnerFilter} from './../../utils/filters';
+const Search = Input.Search;
 const deleteRunner = gql`
 mutation deleteRunner($id: ID) {
   deleteRunner(id: $id) {
@@ -43,6 +44,14 @@ class RunnersTable extends React.Component {
         }).isRequired,
     };
 
+    constructor(props){
+        super(props)
+
+        this.state = {
+          search: null
+        }
+    }
+
     onDeleteClick(record) {
         this.props
             .deleteRunnerMutation({
@@ -55,6 +64,12 @@ class RunnersTable extends React.Component {
                     `${record.firstName} ${record.lastName} wurde gelöscht`,
                 );
             });
+    }
+
+    onSearch(text){
+      this.setState({
+        search: text
+      })
     }
 
     render() {
@@ -87,7 +102,7 @@ class RunnersTable extends React.Component {
             firstName: item.firstName,
             lastName: item.lastName,
             email: item.email,
-        }));
+        })).filter(item => runnerFilter(item, this.state.search));
 
         const columns = [
             {
@@ -126,6 +141,11 @@ class RunnersTable extends React.Component {
         return (
             <div>
               {header}
+              <Search
+                placeholder="Suche nach Name, Startnummer, Email"
+                style={{ flex: 1 }}
+                onSearch={value => this.onSearch(value)}
+              />
                 <Table pagination={false} dataSource={dataSource} columns={columns} />
             </div>
         );

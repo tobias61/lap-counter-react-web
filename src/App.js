@@ -17,6 +17,12 @@ import TeamForm from "./components/TeamForm/TeamForm";
 import TeamRunnerForm from "./components/TeamRunnerForm/TeamRunnerForm";
 import ResultsDashboard from "./components/ResultsDashboard/ResultsDashboard";
 import ResultsPersonalRunner from "./components/ResultsPersonalRunner/ResultsPersonalRunner";
+import ResultsTeams from "./components/ResultsTeams/ResultsTeams";
+import ResultsAllRunner from "./components/ResultsAllRunner/ResultsAllRunner";
+import ResultRunner from "./components/ResultRunner/ResultRunner";
+import ResultTeam  from "./components/ResultTeam/ResultTeam";
+import ResultsSchoolTeams from "./components/ResultsSchoolTeams/ResultsSchoolTeams";
+import ResultsFastestRunner from "./components/ResultsFastestRunner/ResultsFastestRunner";
 const { Header, Content, Footer, Sider } = Layout;
 
 
@@ -37,10 +43,39 @@ class App extends Component {
                             <Layout style={{ padding: '24px 0', background: '#fff' }}>
                                 <Route exact path="/" component={Home}/>
                                 <Route exact path="/results" component={ResultsDashboard}/>
+                                <Route exact path="/results/runners" component={ResultsAllRunner}/>
+                                <Route exact path="/results/runners/:sort" render={(props) => (
+                                    <ResultsAllRunner sort={props.match.params.sort}/>
+                                )} />
+                                <Route exact path="/results/fastestrunners" render={(props) => (
+                                    <ResultsFastestRunner/>
+                                )} />
+
+                                <Route exact path="/results/runner/:id" render={(props) => (
+                                    <ResultRunner id={props.match.params.id}/>
+                                )} />
+                                <Route exact path="/results/team/:id" render={(props) => (
+                                    <ResultTeam id={props.match.params.id}/>
+                                )} />
                                 <Route exact path="/results/personal/:minAge/:maxAge" render={(props)=>{
 
                                     return <ResultsPersonalRunner minAge={parseInt(props.match.params.minAge)} maxAge={parseInt(props.match.params.maxAge)} />
                                 }}/>
+
+                                <Route exact path="/results/teams/:min" render={(props)=>{
+
+                                    return <ResultsTeams min={parseInt(props.match.params.min)} />
+                                }}/>
+
+                                <Route exact path="/results/teams/:min/:max" render={(props)=>{
+
+                                    return <ResultsTeams min={parseInt(props.match.params.min)} max={parseInt(props.match.params.max)} />
+                                }}/>
+
+                                <Route exact path="/results/schoolteams" render={(props)=>{
+                                    return <ResultsSchoolTeams />
+                                }}/>
+
                                 <Route exact path="/import" component={RunnersImport}/>
                                 <Route exact path="/runners" component={RunnersTable}/>
                                 <Route exact path="/runners/:id" render={(props) => (
