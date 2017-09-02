@@ -19,21 +19,21 @@ import sponsorsQuery from '../SponsorsTable/sponsorsList';
 const FormItem = Form.Item;
 
 class SponsorForm extends React.Component {
-  static propTypes = {
-    id: PropTypes.string,
-    getSponsor: PropTypes.object.isRequired,
-    form: PropTypes.object,
-    createSponsorMutation: PropTypes.func,
-    updateSponsorMutation: PropTypes.func,
-      onCreate: PropTypes.func,
-      onSubmit: PropTypes.func,
-  };
+    static propTypes = {
+        id: PropTypes.string,
+        getSponsor: PropTypes.object.isRequired,
+        form: PropTypes.object,
+        createSponsorMutation: PropTypes.func,
+        updateSponsorMutation: PropTypes.func,
+        onCreate: PropTypes.func,
+        onSubmit: PropTypes.func,
+    };
 
-  static defaultProps = {
-    id: null,
-  };
+    static defaultProps = {
+        id: null,
+    };
 
-  componentDidMount() {}
+    componentDidMount() {}
 
     cleanValues(values){
         return Object.keys(values).reduce((res, cur)=>{
@@ -46,207 +46,234 @@ class SponsorForm extends React.Component {
         },{})
     }
 
-  handleSubmit = e => {
-    e.preventDefault();
-    this.props.form.validateFieldsAndScroll((err, values) => {
-      if (!err) {
+    handleSubmit = e => {
+        e.preventDefault();
+        this.props.form.validateFieldsAndScroll((err, values) => {
+            if (!err) {
 
-          values = this.cleanValues(values);
-          if (this.props.onSubmit){
-              this.props.onSubmit(values);
-              return;
-          }
+                values = this.cleanValues(values);
+                if (this.props.onSubmit){
+                    this.props.onSubmit(values);
+                    return;
+                }
 
-          if (this.props.id){
-              this.props
-                  .updateSponsorMutation({
-                      refetchQueries: [{ query: sponsorsQuery }],
-                      variables: {
-                          id: this.props.id,
-												  sponsorInput: values
-                      },
-                  })
-                  .then(res => {
-                      console.log(res);
+                if (this.props.id){
+                    this.props
+                        .updateSponsorMutation({
+                            refetchQueries: [{ query: sponsorsQuery }],
+                            variables: {
+                                id: this.props.id,
+                                sponsorInput: values
+                            },
+                        })
+                        .then(res => {
+                            console.log(res);
 
-                  });
-          }else {
-              this.props
-                  .createSponsorMutation({
-                      refetchQueries: [{ query: sponsorsQuery }],
-                      variables: { sponsorInput: values },
-                  })
-                  .then(res => {
-                      console.log(res);
-                      if (this.props.onCreate){
-                          this.props.onCreate(res.data.createSponsor.id)
-                      }
-                  });
-          }
-      }
-    });
-  };
-
-  render() {
-    const { getFieldDecorator } = this.props.form;
-
-    const formItemLayout = {
-      labelCol: {
-        xs: { span: 24 },
-        sm: { span: 6 },
-      },
-      wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 14 },
-      },
+                        });
+                }else {
+                    this.props
+                        .createSponsorMutation({
+                            refetchQueries: [{ query: sponsorsQuery }],
+                            variables: { sponsorInput: values },
+                        })
+                        .then(res => {
+                            console.log(res);
+                            if (this.props.onCreate){
+                                this.props.onCreate(res.data.createSponsor.id)
+                            }
+                        });
+                }
+            }
+        });
     };
 
-    const tailFormItemLayout = {
-      wrapperCol: {
-        xs: {
-          span: 24,
-          offset: 0,
-        },
-        sm: {
-          span: 14,
-          offset: 6,
-        },
-      },
-    };
+    render() {
+        const { getFieldDecorator } = this.props.form;
 
-    return (
-      <Form style={{ padding: 10 }} onSubmit={this.handleSubmit}>
-        <FormItem {...formItemLayout} label={<span>Name</span>} hasFeedback>
-          {getFieldDecorator('name', {
-            rules: [
-              {
-                required: true,
-                message: 'Name eintragen',
-                whitespace: true,
-              },
-            ],
-          })(<Input />)}
-        </FormItem>
+        const formItemLayout = {
+            labelCol: {
+                xs: { span: 24 },
+                sm: { span: 6 },
+            },
+            wrapperCol: {
+                xs: { span: 24 },
+                sm: { span: 14 },
+            },
+        };
 
-        <FormItem {...formItemLayout} label={<span>Vorname</span>} hasFeedback>
-          {getFieldDecorator('contact_firstName', {
-            rules: [
-              {
-                required: true,
-                message: 'Vorname eintragen',
-                whitespace: true,
-              },
-            ],
-          })(<Input />)}
-        </FormItem>
+        const tailFormItemLayout = {
+            wrapperCol: {
+                xs: {
+                    span: 24,
+                    offset: 0,
+                },
+                sm: {
+                    span: 14,
+                    offset: 6,
+                },
+            },
+        };
 
-        <FormItem {...formItemLayout} label={<span>Nachname</span>} hasFeedback>
-          {getFieldDecorator('contact_lastName', {
-            rules: [
-              {
-                required: true,
-                message: 'Nachname eintragen',
-                whitespace: true,
-              },
-            ],
-          })(<Input />)}
-        </FormItem>
+        return (
+            <Form style={{ padding: 10 }} onSubmit={this.handleSubmit}>
+                <FormItem {...formItemLayout} label={<span>Name</span>} hasFeedback>
+                    {getFieldDecorator('name', {
+                        rules: [
+                            {
+                                required: true,
+                                message: 'Name eintragen',
+                                whitespace: true,
+                            },
+                        ],
+                    })(<Input />)}
+                </FormItem>
 
-        <FormItem {...formItemLayout} label="E-mail" hasFeedback>
-          {getFieldDecorator('email', {
-            rules: [
-              {
-                type: 'email',
-                message: 'Keine gültige E-mail Adresse!',
-              },
-            ],
-          })(<Input />)}
-        </FormItem>
+                <FormItem {...formItemLayout} label={<span>Vorname</span>} hasFeedback>
+                    {getFieldDecorator('contact_firstName', {
+                        rules: [
+                            {
+                                required: true,
+                                message: 'Vorname eintragen',
+                                whitespace: true,
+                            },
+                        ],
+                    })(<Input />)}
+                </FormItem>
 
-        <FormItem
-          {...formItemLayout}
-          label={<span>Spendenbetrag / Runde</span>}
-          hasFeedback
-        >
-          {getFieldDecorator('sponsor_amount', {
-            rules: [
-              {
-                pattern: /(?:^\d{1,3}(?:\.?\d{3})*(?:,\d{2})?$)|(?:^\d{1,3}(?:,?\d{3})*(?:\.\d{2})?$)/g,
-                message: 'Betrag ungültig',
-              },
-            ],
-          })(<Input />)}
-        </FormItem>
+                <FormItem {...formItemLayout} label={<span>Nachname</span>} hasFeedback>
+                    {getFieldDecorator('contact_lastName', {
+                        rules: [
+                            {
+                                required: true,
+                                message: 'Nachname eintragen',
+                                whitespace: true,
+                            },
+                        ],
+                    })(<Input />)}
+                </FormItem>
 
-        <FormItem
-          {...formItemLayout}
-          label={<span>Barzahlung?</span>}
-          hasFeedback
-        >
-          {getFieldDecorator('cash', {
-						valuePropName: 'checked',
-            rules: [],
-          })(<Checkbox />)}
-        </FormItem>
+                <FormItem {...formItemLayout} label={<span>Adresse</span>} hasFeedback>
+                    {getFieldDecorator('contact_address', {
+                        rules: [
 
-        <FormItem
-          {...formItemLayout}
-          label={<span>Spendenbescheinigung?</span>}
-          hasFeedback
-        >
-          {getFieldDecorator('donation_receipt', {
-						valuePropName: 'checked',
-            rules: [],
-          })(<Checkbox />)}
-        </FormItem>
+                        ],
+                    })(<Input />)}
+                </FormItem>
 
-        <FormItem {...tailFormItemLayout}>
-          <Button type="primary" htmlType="submit">
-            Speichern
-          </Button>
-        </FormItem>
-      </Form>
-    );
-  }
+                <FormItem {...formItemLayout} label="E-mail" hasFeedback>
+                    {getFieldDecorator('email', {
+                        rules: [
+                            {
+                                type: 'email',
+                                message: 'Keine gültige E-mail Adresse!',
+                            },
+                        ],
+                    })(<Input />)}
+                </FormItem>
+
+                <FormItem
+                    {...formItemLayout}
+                    label={<span>Spendenbetrag / Runde</span>}
+                    hasFeedback
+                >
+                    {getFieldDecorator('sponsor_amount', {
+                        rules: [
+                            {
+                                pattern: /(?:^\d{1,3}(?:\.?\d{3})*(?:,\d{2})?$)|(?:^\d{1,3}(?:,?\d{3})*(?:\.\d{2})?$)/g,
+                                message: 'Betrag ungültig',
+                            },
+                        ],
+                    })(<Input />)}
+                </FormItem>
+
+                <FormItem
+                    {...formItemLayout}
+                    label={<span>Barzahlung?</span>}
+                    hasFeedback
+                >
+                    {getFieldDecorator('cash', {
+                        valuePropName: 'checked',
+                        rules: [],
+                    })(<Checkbox />)}
+                </FormItem>
+
+                <FormItem
+                    {...formItemLayout}
+                    label={<span>Spendenbescheinigung?</span>}
+                    hasFeedback
+                >
+                    {getFieldDecorator('donation_receipt', {
+                        valuePropName: 'checked',
+                        rules: [],
+                    })(<Checkbox />)}
+                </FormItem>
+
+                <FormItem
+                    {...formItemLayout}
+                    label={<span>50 / 50?</span>}
+                    hasFeedback
+                >
+                    {getFieldDecorator('fiftyFifty', {
+                        valuePropName: 'checked',
+                        rules: [],
+                    })(<Checkbox />)}
+                </FormItem>
+
+                <FormItem {...tailFormItemLayout}>
+                    <Button type="primary" htmlType="submit">
+                        Speichern
+                    </Button>
+                </FormItem>
+            </Form>
+        );
+    }
 }
 
 const WrappedSponsorForm = Form.create({
-  mapPropsToFields: props => {
-    if (!props.getSponsor.sponsor) return {};
+    mapPropsToFields: props => {
+        if (!props.getSponsor.sponsor) return {};
 
-    return {
-      name: {
-        value: props.getSponsor.sponsor.name,
-      },
-      contact_firstName: {
-        value: props.getSponsor.sponsor.contact_firstName,
-      },
-      contact_lastName: {
-        value: props.getSponsor.sponsor.contact_lastName,
-      },
-      email: {
-        value: props.getSponsor.sponsor.email,
-      },
-      sponsor_amount: {
-        value: props.getSponsor.sponsor.sponsor_amount,
-      },
-      cash: {
-        value: props.getSponsor.sponsor.cash,
-      },
-      donation_receipt: {
-        value: props.getSponsor.sponsor.donation_receipt,
-      },
-    };
-  },
+        return {
+            name: {
+                value: props.getSponsor.sponsor.name,
+            },
+            contact_firstName: {
+                value: props.getSponsor.sponsor.contact_firstName,
+            },
+            contact_lastName: {
+                value: props.getSponsor.sponsor.contact_lastName,
+            },
+            contact_address: {
+                value: props.getSponsor.sponsor.contact_address,
+            },
+            email: {
+                value: props.getSponsor.sponsor.email,
+            },
+            sponsor_amount: {
+                value: props.getSponsor.sponsor.sponsor_amount,
+            },
+            cash: {
+                value: props.getSponsor.sponsor.cash,
+            },
+            donation_receipt: {
+                value: props.getSponsor.sponsor.donation_receipt,
+            },
+            fiftyFifty: {
+                value: props.getSponsor.sponsor.fiftyFifty,
+            },
+        };
+    },
 })(SponsorForm);
 
 export default compose(
-  graphql(getSponsor, {
-    name: 'getSponsor',
-    options: props => ({
-      variables: { id: props.id },
+    graphql(getSponsor, {
+        name: 'getSponsor',
+
+        options: props => ({
+            fetchPolicy: 'network-only',
+            variables: { id: props.id },
+        }),
     }),
-  }),
-  graphql(createSponsor, {name: 'createSponsorMutation',}),
-  graphql(updateSponsor, { name: 'updateSponsorMutation' }),
+    graphql(createSponsor, {name: 'createSponsorMutation',}),
+    graphql(updateSponsor, { name: 'updateSponsorMutation' }),
 )(WrappedSponsorForm);

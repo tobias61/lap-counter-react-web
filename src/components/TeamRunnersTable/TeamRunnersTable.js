@@ -164,6 +164,7 @@ class TeamRunnersTable extends Component {
 export default compose(
     graphql(getTeamRunners, {
         name: 'getTeamRunners',
+        fetchPolicy: 'cache-and-network',
         options: props => ({
             variables: { team_id: props.teamId },
         }),

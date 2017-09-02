@@ -111,6 +111,8 @@ class TeamsTable extends React.Component {
     }
 }
 export default compose(
-    graphql(teamsQuery),
+    graphql(teamsQuery, {
+        options: { fetchPolicy: 'cache-and-network' },
+    }),
     graphql(deleteTeam, { name: 'deleteTeamMutation' }),
 )(TeamsTable);

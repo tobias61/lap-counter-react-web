@@ -7,11 +7,13 @@ const query = gql`query getSponsor($id: String) {
         name
         contact_firstName
         contact_lastName
+        contact_address
         cash
         email
         personal
         donation_receipt
         sponsor_amount
+        fiftyFifty
     }
 }
 `;

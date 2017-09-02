@@ -36,11 +36,11 @@ class RunnerResultTable extends Component {
 
     render(){
 
-        const dataSource = this.props.runners.map((item,index)=> ({...item, position: index+1}));
+        const dataSource = this.props.runners.map((item,index)=> ({...item, laps: item.laps || 0, number: item.number || '-', position: index+1}));
         const columns = [{
             title: 'Platz',
             dataIndex: 'position',
-            key: 'postion',
+            key: 'position',
         },{
             title: 'Runden',
             dataIndex: 'laps',
@@ -60,7 +60,7 @@ class RunnerResultTable extends Component {
         }];
 
         return <div>
-            <Table scroll={{ y: 300 }} dataSource={dataSource} columns={columns} />
+            <Table dataSource={dataSource} columns={columns} />
         </div>;
     }
 

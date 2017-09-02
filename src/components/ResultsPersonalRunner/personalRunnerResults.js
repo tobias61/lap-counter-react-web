@@ -1,13 +1,15 @@
 import gql from 'graphql-tag'
 
 const runnersQuery = gql`
-    query RunnerList {
-        runnerList{
+    query PersonalResults($minAge: Int, $maxAge: Int) {
+        personalResults(minAge: $minAge, maxAge: $maxAge){
             runners {
                 id
                 lastName
                 firstName
                 email
+                laps
+                age
                 number
             }
         }

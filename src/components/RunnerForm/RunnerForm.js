@@ -257,6 +257,17 @@ class RunnerForm extends React.Component {
                         })(<Input  placeholder="Mustermann" />)}
                     </FormItem>
 
+                    <FormItem {...formItemLayout} label="Kontakt E-mail" hasFeedback>
+                        {getFieldDecorator('sponsor_email', {
+                            rules: [
+                                {
+                                    type: 'email',
+                                    message: 'Keine gültige E-mail Adresse!',
+                                },
+                            ],
+                        })(<Input />)}
+                    </FormItem>
+
                     <FormItem
                         {...formItemLayout}
                         label={<span>Spendenbetrag / Runde</span>}
@@ -282,6 +293,8 @@ class RunnerForm extends React.Component {
                             rules: [],
                         })(<Checkbox />)}
                     </FormItem>
+
+
 
                     <FormItem
                         {...formItemLayout}
@@ -352,6 +365,9 @@ const WrappedRunnerForm = Form.create({
             sponsor_amount: {
                 value: props.sponsor ? props.sponsor.sponsor_amount : null,
             },
+            sponsor_email: {
+                value: props.sponsor ? props.sponsor.email : null,
+            }
         };
     },
 })(RunnerForm);

@@ -94,4 +94,4 @@ class SponsorsTable extends React.Component {
     );
   }
 }
-export default compose(graphql(sponsorsQuery))(SponsorsTable);
+export default compose(graphql(sponsorsQuery,{options: { fetchPolicy: 'cache-and-network' }}))(SponsorsTable);

@@ -72,6 +72,7 @@ export default compose(
         name: 'getRunner',
         options: props => {
             return {
+                fetchPolicy: 'network-only',
                 variables: { id: props.id },
             }},
     }),

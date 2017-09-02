@@ -112,6 +112,17 @@ class TeamForm extends React.Component {
           })(<Input />)}
         </FormItem>
 
+          <FormItem
+              {...formItemLayout}
+              label={<span>Schule?</span>}
+              hasFeedback
+          >
+              {getFieldDecorator('isSchool', {
+                  valuePropName: 'checked',
+                  rules: [],
+              })(<Checkbox />)}
+          </FormItem>
+
 
 
         <FormItem {...tailFormItemLayout}>
@@ -157,7 +168,9 @@ const WrappedTeamForm = Form.create({
       name: {
         value: props.getTeam.team.name,
       },
-
+        isSchool: {
+            value: props.getTeam.team.isSchool,
+        },
     };
   },
 })(TeamForm);
@@ -166,7 +179,8 @@ export default compose(
   graphql(getTeam, {
     name: 'getTeam',
     options: props => ({
-      variables: { id: props.id },
+        fetchPolicy: 'network-only',
+        variables: { id: props.id },
     }),
   }),
   graphql(createTeam, {name: 'createTeamMutation',}),

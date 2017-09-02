@@ -21,60 +21,63 @@ const { Header, Content, Footer, Sider } = Layout;
 
 
 class App extends Component {
-  render() {
-    return (
-      <div className="App">
+    render() {
+        return (
+            <div className="App">
 
-          <Router>
-              <Layout>
+                <Router>
+                    <Layout>
 
-                  <Header className="header">
-                      <Navigation/>
-                  </Header>
-
-
-                  <Content style={{ padding: '0 24px', minHeight: 280, textAlign: 'left' }}>
-                      <Layout style={{ padding: '24px 0', background: '#fff' }}>
-                          <Route exact path="/" component={Home}/>
-                          <Route exact path="/results" component={ResultsDashboard}/>
-                          <Route exact path="/results/personal" component={ResultsPersonalRunner}/>
-                          <Route exact path="/import" component={RunnersImport}/>
-                          <Route exact path="/runners" component={RunnersTable}/>
-                        <Route exact path="/runners/:id" render={(props) => (
-                          <PersonalRunnerForm personal onCreate={(id)=>{
-														props.history.push('/runners/'+id)
-													}} id={props.match.params.id !== 'create' ? props.match.params.id : null}/>
-												)} />
-                          <Route exact path="/teamrunners/:id" render={(props) => (
-                              <TeamRunnerForm onCreate={(id)=>{
-                                  props.history.push('/teamrunners/'+id)
-                              }} id={props.match.params.id !== 'create' ? props.match.params.id : null}/>
-                          )} />
-                          <Route exact path="/sponsors" component={SponsorsTable}/>
-                          <Route exact path="/sponsors/:id" render={(props) => (
-                              <SponsorForm onCreate={(id)=>{
-                                  props.history.push('/sponsors/'+id)
-                              }} id={props.match.params.id !== 'create' ? props.match.params.id : null}/>
-                          )}/>
-                          <Route exact path="/teams" component={TeamsTable}/>
-                          <Route exact path="/teams/:id" render={(props) => (
-                              <TeamForm onCreate={(id)=>{
-                                  props.history.push('/teams/'+id)
-                              }} id={props.match.params.id !== 'create' ? props.match.params.id : null}/>
-                          )}/>
-
-                      </Layout>
-
-                  </Content>
+                        <Header className="header">
+                            <Navigation/>
+                        </Header>
 
 
-              </Layout>
+                        <Content style={{ padding: '0 24px', minHeight: 280, textAlign: 'left' }}>
+                            <Layout style={{ padding: '24px 0', background: '#fff' }}>
+                                <Route exact path="/" component={Home}/>
+                                <Route exact path="/results" component={ResultsDashboard}/>
+                                <Route exact path="/results/personal/:minAge/:maxAge" render={(props)=>{
+
+                                    return <ResultsPersonalRunner minAge={parseInt(props.match.params.minAge)} maxAge={parseInt(props.match.params.maxAge)} />
+                                }}/>
+                                <Route exact path="/import" component={RunnersImport}/>
+                                <Route exact path="/runners" component={RunnersTable}/>
+                                <Route exact path="/runners/:id" render={(props) => (
+                                    <PersonalRunnerForm personal onCreate={(id)=>{
+                                        props.history.push('/runners/'+id)
+                                    }} id={props.match.params.id !== 'create' ? props.match.params.id : null}/>
+                                )} />
+                                <Route exact path="/teamrunners/:id" render={(props) => (
+                                    <TeamRunnerForm onCreate={(id)=>{
+                                        props.history.push('/teamrunners/'+id)
+                                    }} id={props.match.params.id !== 'create' ? props.match.params.id : null}/>
+                                )} />
+                                <Route exact path="/sponsors" component={SponsorsTable}/>
+                                <Route exact path="/sponsors/:id" render={(props) => (
+                                    <SponsorForm onCreate={(id)=>{
+                                        props.history.push('/sponsors/'+id)
+                                    }} id={props.match.params.id !== 'create' ? props.match.params.id : null}/>
+                                )}/>
+                                <Route exact path="/teams" component={TeamsTable}/>
+                                <Route exact path="/teams/:id" render={(props) => (
+                                    <TeamForm onCreate={(id)=>{
+                                        props.history.push('/teams/'+id)
+                                    }} id={props.match.params.id !== 'create' ? props.match.params.id : null}/>
+                                )}/>
+
+                            </Layout>
+
+                        </Content>
 
 
-          </Router>
-      </div>
-    );
-  }
+                    </Layout>
+
+
+                </Router>
+            </div>
+        );
+    }
 }
 
 export default App;

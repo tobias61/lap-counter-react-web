@@ -132,6 +132,6 @@ class RunnersTable extends React.Component {
     }
 }
 export default compose(
-    graphql(runnersQuery),
+    graphql(runnersQuery,{options: { fetchPolicy: 'cache-and-network' }}),
     graphql(deleteRunner, { name: 'deleteRunnerMutation' }),
 )(RunnersTable);
