@@ -257,6 +257,14 @@ class RunnerForm extends React.Component {
                         })(<Input  placeholder="Mustermann" />)}
                     </FormItem>
 
+                    <FormItem {...formItemLayout} label={<span>Adresse</span>} hasFeedback>
+											{getFieldDecorator('contact_address', {
+												rules: [
+
+												],
+											})(<Input />)}
+                    </FormItem>
+
                     <FormItem {...formItemLayout} label="Kontakt E-mail" hasFeedback>
                         {getFieldDecorator('sponsor_email', {
                             rules: [
@@ -356,6 +364,9 @@ const WrappedRunnerForm = Form.create({
             contact_lastName: {
                 value: props.sponsor ? props.sponsor.contact_lastName : null,
             },
+					contact_address: {
+						value: props.sponsor ? props.sponsor.contact_address : null,
+          },
             cash: {
                 value: props.sponsor ? props.sponsor.cash : null,
             },

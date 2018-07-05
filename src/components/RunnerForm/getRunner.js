@@ -14,6 +14,7 @@ const query = gql`query getRunner($id: String) {
         name
         contact_firstName
         contact_lastName
+        contact_address
         cash
         donation_receipt
         sponsor_amount

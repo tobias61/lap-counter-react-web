@@ -29,11 +29,11 @@ class ResultsFastestRunner extends Component {
 
       const runners = this.props.data.allRunnerResults.runners.map(item => {
 
-        const fastestLap = _.first(_.sortBy(item.lapTimes, 'time').filter(item => item && item.time !== 0)) ;
+        const fastestLap = _.first(_.sortBy(item.lapTimes, 'time').filter(item => item && item.time)) ;
         return {
           ...item,
           fastestLap: fastestLap,
-          fastestLapTime: fastestLap.time
+          fastestLapTime: fastestLap ? fastestLap.time : null
         }
       })
 
@@ -41,7 +41,7 @@ class ResultsFastestRunner extends Component {
 
         return <div style={{padding: '0 10px'}}>
             <h1>Schnellste Läufer</h1>
-            <RunnerResultTable runners={ _.sortBy(runners, (item)=>item.fastestLap.time) } />
+            <RunnerResultTable runners={ _.sortBy(runners, (item)=> item.fastestLap ? item.fastestLap.time : null) } />
         </div>;
     }
 
